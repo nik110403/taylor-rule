@@ -1,7 +1,7 @@
 # Taylor Rule Estimation
 
-Replication repository for the deep dive *Discretion Over Rules: Federal Reserve Policy
-Departures and the Inflation Surge of 2021–2022* (nikkhosravipour.com/research).
+Replication repository for the deep dive [*Discretion Over Rules: Federal Reserve Policy
+Departures and the Inflation Surge of 2021–2022*](https://nikkhosravipour.com/post/discretion-over-rules-federal-reserve-policy-departures-and-the-inflation-surge-of-2021-2022).
 
 R pulls quarterly macroeconomic series from FRED, computes three Taylor-rule specifications
 and an ECB comparison, tests for Granger causality and cross-correlation between deviations
