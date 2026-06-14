@@ -1,0 +1,26 @@
+# Claude / agent tooling — never publish
+.claude/
+.mcp.json
+CLAUDE.md
+CLAUDE.local.md
+.claude-*
+
+# Secrets
+.Renviron
+
+# R
+.Rhistory
+.RData
+.Rproj.user/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# Heavy / regenerable intermediates
+**/*.rds
+data-raw/
+
+# OS
+.DS_Store

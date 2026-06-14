@@ -1,0 +1,110 @@
+<figure class="chart-embed" style="margin:0; font-family:var(--font-body);">
+<p style="margin:0 0 3px;font-size:10px;letter-spacing:0.13em;text-transform:uppercase;color:var(--muted);">Federal Reserve · Deep Dive · 2015–2024</p>
+<p style="margin:0 0 3px;font-size:18px;font-weight:500;color:var(--text);line-height:1.3;">Federal Reserve Policy vs. Rules-Based Prescriptions</p>
+<p style="margin:0 0 18px;font-size:12px;color:var(--muted);">Effective federal funds rate and three Taylor Rule variants · percent · quarterly</p>
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px;"><div style="background:var(--bg-soft);border:1px solid var(--border);border-radius:6px;padding:8px 12px;"><div style="font-size:0.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:2px;">Peak deviation</div><div style="font-size:1.05rem;font-weight:600;color:var(--text);">+8.3pp</div></div><div style="background:var(--bg-soft);border:1px solid var(--border);border-radius:6px;padding:8px 12px;"><div style="font-size:0.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:2px;">Quarters at zero bound</div><div style="font-size:1.05rem;font-weight:600;color:var(--text);">10</div></div><div style="background:var(--bg-soft);border:1px solid var(--border);border-radius:6px;padding:8px 12px;"><div style="font-size:0.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:2px;">Peak core PCE</div><div style="font-size:1.05rem;font-weight:600;color:var(--text);">5.6%</div></div></div>
+<div style="display:flex;flex-wrap:wrap;gap:16px;margin-bottom:12px;"><span style="display:inline-flex;align-items:center;gap:6px;font-size:11px;color:var(--muted);"><span data-k="actual" style="display:inline-block;width:20px;height:2px;background:#888;border-radius:1px;flex-shrink:0;"></span>Actual EFFR</span><span style="display:inline-flex;align-items:center;gap:6px;font-size:11px;color:var(--muted);"><span data-k="taylor1" data-dash="1" style="display:inline-block;width:20px;height:0;border-bottom:2px dashed #888;flex-shrink:0;"></span>Taylor (baseline, r*=0.5%)</span><span style="display:inline-flex;align-items:center;gap:6px;font-size:11px;color:var(--muted);"><span data-k="taylor2" data-dash="1" style="display:inline-block;width:20px;height:0;border-bottom:2px dashed #888;flex-shrink:0;"></span>Taylor (r*=1.0%)</span><span style="display:inline-flex;align-items:center;gap:6px;font-size:11px;color:var(--muted);"><span data-k="taylor3" data-dash="1" style="display:inline-block;width:20px;height:0;border-bottom:2px dashed #888;flex-shrink:0;"></span>Inertial Taylor</span></div>
+<div style="position:relative; width:100%; height:260px;">
+<canvas id="taylor-fig1" role="img" aria-label="Line chart: Taylor Rule variants vs actual federal funds rate, 2015-2024"></canvas>
+</div>
+<div style="margin-top:14px;padding-top:10px;border-top:1px solid var(--border);display:flex;justify-content:space-between;font-size:10px;color:var(--muted);letter-spacing:0.02em;"><span>Source: <a href="https://fred.stlouisfed.org/" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline;">Federal Reserve Economic Data (FRED)</a>, CBO. Author&#8217;s calculations.</span><a href="https://nikkhosravipour.com" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline;">nikkhosravipour.com</a></div>
+</figure>
+<script>
+(function () {
+  window.__chartjs = window.__chartjs || new Promise(function(resolve) {
+    if (window.Chart) return resolve();
+    var s = document.createElement('script');
+    s.src = 'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js';
+    s.onload = resolve;
+    document.head.appendChild(s);
+  });
+  var canvas = document.getElementById('taylor-fig1');
+  if (!canvas) return;
+  var scope = canvas.closest('figure');
+  var chart;
+  function palette() {
+    var light = document.documentElement.classList.contains('is-light');
+    return {
+      tick:    light ? 'rgba(0,0,0,0.42)'       : 'rgba(255,255,255,0.5)',
+      grid:    light ? 'rgba(0,0,0,0.06)'       : 'rgba(255,255,255,0.07)',
+      yTick:   light ? 'rgba(0,0,0,0.65)'       : 'rgba(255,255,255,0.7)',
+      actual:  light ? '#1C1C1A'                : '#E8E6DF',
+      taylor1: light ? '#185FA5'                : '#60a5fa',
+      taylor2: light ? '#1D9E75'                : '#34d399',
+      taylor3: light ? '#BA7517'                : '#f59e0b',
+      dev_pos: light ? '#D85A30'                : '#f87171',
+      dev_neg: light ? '#185FA5'                : '#60a5fa',
+      ecb:     light ? '#534AB7'                : '#a78bfa',
+      infl:    light ? '#A32D2D'                : '#ef4444',
+      covid:   light ? 'rgba(185,210,235,0.35)' : 'rgba(96,165,250,0.12)',
+      text:    light ? '#1C1C1A'                : '#E8E6DF',
+      muted:   light ? 'rgba(0,0,0,0.50)'       : 'rgba(255,255,255,0.55)',
+    };
+  }
+  function render() {
+    if (!window.Chart) return;
+    var c = palette();
+    scope.querySelectorAll('[data-k]').forEach(function(sw) {
+      if (sw.dataset.dash) sw.style.borderBottomColor = c[sw.dataset.k];
+      else sw.style.background = c[sw.dataset.k];
+    });
+    var labels = ["2015-Q1","2015-Q2","2015-Q3","2015-Q4","2016-Q1","2016-Q2","2016-Q3","2016-Q4","2017-Q1","2017-Q2","2017-Q3","2017-Q4","2018-Q1","2018-Q2","2018-Q3","2018-Q4","2019-Q1","2019-Q2","2019-Q3","2019-Q4","2020-Q1","2020-Q2","2020-Q3","2020-Q4","2021-Q1","2021-Q2","2021-Q3","2021-Q4","2022-Q1","2022-Q2","2022-Q3","2022-Q4","2023-Q1","2023-Q2","2023-Q3","2023-Q4","2024-Q1","2024-Q2","2024-Q3","2024-Q4"];
+    var covidPlugin = {
+      id: 'covidShade',
+      afterDraw: function(chart) {
+        var ctx = chart.ctx, ca = chart.chartArea, xs = chart.scales.x;
+        var i1 = labels.indexOf('2020-Q1'), i2 = labels.indexOf('2022-Q1');
+        if (i1 < 0 || i2 < 0) return;
+        var px1 = xs.getPixelForValue(i1), px2 = xs.getPixelForValue(i2);
+        ctx.save();
+        ctx.fillStyle = c.covid;
+        ctx.fillRect(px1, ca.top, px2 - px1, ca.bottom - ca.top);
+        ctx.restore();
+      }
+    };
+    if (chart) chart.destroy();
+    chart = new Chart(canvas, {
+      type: 'line',
+      plugins: [covidPlugin],
+      data: {
+        labels: labels,
+        datasets: [
+          { label: 'Actual EFFR', data: [0.11, 0.13, 0.14, 0.24, 0.36, 0.38, 0.40, 0.54, 0.79, 1.04, 1.15, 1.30, 1.51, 1.82, 1.95, 2.27, 2.41, 2.38, 2.04, 1.55, 0.65, 0.08, 0.09, 0.09, 0.07, 0.08, 0.08, 0.08, 0.20, 1.21, 2.56, 4.10, 4.65, 5.08, 5.33, 5.33, 5.33, 5.33, 5.13, 4.48],
+            borderColor: c.actual, borderWidth: 3, pointRadius: 0, tension: 0.3, fill: false },
+          { label: 'Taylor (baseline)', data: [1.04, 1.05, 0.97, 0.74, 1.17, 1.22, 1.52, 1.68, 1.53, 1.41, 1.32, 1.86, 2.52, 2.57, 2.66, 2.58, 2.00, 2.21, 2.50, 2.45, 1.51, 0.00, 0.62, 0.99, 2.48, 5.57, 5.95, 8.33, 8.48, 7.84, 8.32, 7.39, 7.15, 6.53, 5.73, 4.95, 4.74, 4.30, 4.52, 4.66],
+            borderColor: c.taylor1, borderWidth: 1.5, borderDash: [6,3], pointRadius: 0, tension: 0.3, fill: false },
+          { label: 'Taylor (r*=1.0%)', data: [1.54, 1.55, 1.47, 1.24, 1.67, 1.72, 2.02, 2.18, 2.03, 1.91, 1.82, 2.36, 3.02, 3.07, 3.16, 3.08, 2.50, 2.71, 3.00, 2.95, 2.01, 0.00, 1.12, 1.49, 2.98, 6.07, 6.45, 8.83, 8.98, 8.34, 8.82, 7.89, 7.65, 7.03, 6.23, 5.45, 5.24, 4.80, 5.02, 5.16],
+            borderColor: c.taylor2, borderWidth: 1.5, borderDash: [6,3], pointRadius: 0, tension: 0.3, fill: false },
+          { label: 'Inertial Taylor', data: [null, 0.35, 0.34, 0.29, 0.47, 0.58, 0.67, 0.72, 0.79, 0.95, 1.11, 1.33, 1.60, 1.77, 2.03, 2.11, 2.20, 2.36, 2.41, 2.14, 1.54, 0.49, 0.22, 0.32, 0.69, 1.45, 1.55, 2.14, 2.18, 2.11, 2.99, 3.77, 4.86, 5.12, 5.24, 5.24, 5.18, 5.07, 5.13, 5.01],
+            borderColor: c.taylor3, borderWidth: 1.5, borderDash: [3,3], pointRadius: 0, tension: 0.3, fill: false }
+        ]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false, animation: false,
+        layout: { padding: { top: 26, right: 20, left: 0, bottom: 4 } },
+        interaction: { mode: 'index', intersect: false },
+        plugins: { legend: { display: false }, title: { display: false } },
+        scales: {
+          x: {
+            border: { display: false },
+            grid: { color: c.grid },
+            ticks: { color: c.tick, font: { size: 10, family: 'system-ui, sans-serif' },
+              maxRotation: 0, autoSkip: false,
+              callback: function(val, i) { return i % 4 === 0 ? labels[i] : null; } }
+          },
+          y: {
+            border: { display: false },
+            grid: { color: c.grid },
+            ticks: { color: c.yTick, font: { size: 10, family: 'system-ui, sans-serif' },
+              callback: function(v) { return v + '%'; } }
+          }
+        }
+      }
+    });
+  }
+  window.__chartjs.then(function() {
+    render();
+    new MutationObserver(render).observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+  });
+})();
+</script>
