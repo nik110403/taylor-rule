@@ -1,31 +1,32 @@
 # Taylor Rule Estimation
 
-**How well does a Taylor rule describe recent central-bank behaviour?**
+Replication repository for the deep dive *Discretion Over Rules: Federal Reserve Policy
+Departures and the Inflation Surge of 2021–2022* (nikkhosravipour.com/research).
 
-Estimates and back-tests Taylor-rule policy paths against realised policy rates,
-with a reproducible figure pipeline. The repo loads quarterly macro data from
-FRED, computes prescribed rates under a baseline and an alternative neutral-rate
-assumption, measures the gap against the actual federal funds rate (plus an ECB
-comparison and a cross-correlation diagnostic), and emits both interactive
-Chart.js widgets and static PNG fallbacks.
+R pulls quarterly macroeconomic series from FRED, computes three Taylor-rule specifications
+and an ECB comparison, tests for Granger causality and cross-correlation between deviations
+and core PCE inflation, and exports Chart.js widgets and static PNG fallbacks.
 
-Part of the research on [nikkhosravipour.com](https://nikkhosravipour.com).
+## Data vintage
+
+FRED revises historical series, including `GDPPOT` (CBO potential output). Results reproduce
+exactly against the vintage retrieved for the published piece; subsequent pulls shift the
+output gap series and therefore every Taylor prescription. The sample window is locked at
+2015 Q1–2024 Q4 in `R/config.R` (`START_DATE`, `END_DATE`).
 
 ## Requirements
 
-- R (≥ 4.0)
+- R (≥ 4.0); packages auto-install on first run via `R/setup.R`: `fredr`, `dplyr`, `vars`,
+  `tseries`, `lmtest`, `zoo`, `lubridate`
 - A free FRED API key — https://fredaccount.stlouisfed.org/apikeys
-- R packages are auto-installed on first run (`fredr`, `dplyr`, `vars`,
-  `tseries`, `lmtest`, `zoo`, `lubridate`) via `R/setup.R`.
 
 ## Setup
 
 ```bash
-cp .Renviron.example .Renviron   # then edit and paste your FRED_API_KEY
+cp .Renviron.example .Renviron   # edit and paste your FRED_API_KEY
 ```
 
-R loads `.Renviron` automatically from the project root, so the key is read from
-the environment — it is never stored in the source.
+R loads `.Renviron` from the project root automatically.
 
 ## Run
 
@@ -33,27 +34,68 @@ the environment — it is never stored in the source.
 Rscript run_all.R
 ```
 
-Pipeline order: `01_data` (load + clean FRED series) → `02_analysis` (Taylor-rule
-estimates) → `04_hook_figure` + `03_figures` (Chart.js widgets) → `04_pngs`
-(static PNG export). On completion the script prints a checklist of every
-expected output file.
+On completion the script prints a checklist of every expected output file.
 
-## Outputs
+## FRED series
 
-- `output/widgets/*.html` — standalone Chart.js figures (theme-aware, embeddable)
-- `output/figures/*.png` — static fallbacks
-- `output/data/*.rds` — intermediate R data (regenerable; gitignored)
+| Series ID | Description | Transformation |
+|---|---|---|
+| `FEDFUNDS` | Effective federal funds rate | levels |
+| `PCEPILFE` | Core PCE deflator | YoY% (`pc1`) |
+| `PCEPI` | Headline PCE deflator | YoY% (`pc1`) |
+| `GDPC1` | Real GDP | levels |
+| `GDPPOT` | CBO potential real GDP | levels |
+| `UNRATE` | Unemployment rate | levels |
+| `NROU` | Natural rate of unemployment (CBO) | levels |
+| `ECBDFR` | ECB deposit facility rate | levels |
+| `CP0000EZ19M086NEST` | Euro area HICP | YoY% (`pc1`) |
 
-See [`embed_guide.md`](embed_guide.md) for iframe heights and embedding details.
+Monthly series convert to quarterly by taking the last observation of each quarter.
 
-## Configuration
+## Rule specifications
 
-Constants live in `R/config.R` — sample window (`START_DATE`/`END_DATE`),
-inflation target `PI_STAR`, and neutral-rate assumptions `R_STAR_BASE` /
-`R_STAR_ALT`.
+Three US variants, all floored at zero:
 
-## Data & license
+| Rule | Formula | r\* | Notes |
+|---|---|---|---|
+| Baseline | r\* + π + 0.5(π − π\*) + 0.5·y_gap | 0.5% | Post-GFC Laubach-Williams |
+| Alternative | same | 1.0% | Robustness |
+| Inertial | 0.75·r_{t−1} + 0.25·baseline | 0.5% | Partial-adjustment |
 
-Source data is public, served by [FRED](https://fred.stlouisfed.org/) and subject
-to its terms. The code and generated figures in this repository are licensed
-under [CC BY 4.0](LICENSE) — reuse with attribution.
+π = core PCE YoY%; π\* = 2%; y_gap = 100·(GDPC1 − GDPPOT)/GDPPOT.
+
+ECB comparison (fig4): r\* = 1.0%, π = euro area HICP, no output-gap term (euro area
+potential is not available on FRED), prescribed against `ECBDFR`.
+
+## Analysis
+
+`R/02_analysis.R` runs ADF stationarity tests on inflation and the deviation series,
+bivariate Granger causality at lags 1–4 in both directions, VAR(4) Granger causality
+(via `vars::causality`), and a cross-correlation of the baseline deviation against core
+PCE at lags 0–8 quarters.
+
+## Where things can drift
+
+`GDPPOT` is revised with each CBO Budget and Economic Outlook. Re-running against a later
+vintage will not reproduce the published figures. The companion piece documents
+the vintage used and the direction of any revisions.
+
+## Layout
+
+| Script | Role |
+|---|---|
+| `R/01_data.R` | FRED pull → quarterly conversion → `output/data/df_quarterly.rds` |
+| `R/02_analysis.R` | Taylor variants, ECB rule, ADF/Granger/CCF → `df_analysis.rds`, `df_ccf.rds` |
+| `R/04_hook_figure.R` | Hook figure (fig0) |
+| `R/03_figures.R` | Chart.js widgets (figs 1–5) |
+| `R/04_pngs.R` | Static PNG export |
+| `R/config.R` | Sample window, π\*, r\* assumptions |
+| `R/setup.R` | Package management |
+
+See [`embed_guide.md`](embed_guide.md) for iframe dimensions and embedding notes.
+
+## License
+
+Source data is public, served by [FRED](https://fred.stlouisfed.org/) and subject to its
+terms. The code and generated figures are licensed under [CC BY 4.0](LICENSE) — reuse with
+attribution.
