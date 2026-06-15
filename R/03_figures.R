@@ -140,7 +140,7 @@ js_open <- function(cid) {
     "  window.__chartjs = window.__chartjs || new Promise(function(resolve) {\n",
     "    if (window.Chart) return resolve();\n",
     "    var s = document.createElement('script');\n",
-    "    s.src = 'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js';\n",
+    "    s.src = 'https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.js';\n",
     "    s.onload = resolve;\n",
     "    document.head.appendChild(s);\n",
     "  });\n",

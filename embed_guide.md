@@ -1,7 +1,15 @@
 # Embedding the Taylor Rule Widgets
 
+> **Canonical method for personal.site is inline `html-embed`, not iframes.**
+> Paste the figure's `<figure>`+`<canvas>`+`<script>` fragment into the post
+> markdown wrapped in a ` ```html-embed ` fence. Chart.js must load from
+> `cdn.jsdelivr.net` (the site CSP blocks every other CDN). No hardcoded
+> `nonce=`, no inline `on*=` handlers. Full rules:
+> `~/.claude/_shared/chart-embed-contract.md`. The iframe section below is
+> legacy — only valid if the site explicitly serves these standalone files.
+
 Each figure is a standalone HTML file in `output/widgets/`. The files are
-hand-authored HTML with Chart.js 4.4.1 lazy-loaded from cdnjs (a single
+hand-authored HTML with Chart.js 4.4.1 lazy-loaded from jsDelivr (cdn.jsdelivr.net) (a single
 `<script>` tag injected by `window.__chartjs`). They are **not** self-contained
 in the htmlwidgets sense — the visitor's browser fetches Chart.js from the CDN
 on first load. Subsequent figures on the same page share the same cached
@@ -140,7 +148,7 @@ Test at mobile widths and consider using a fixed-height iframe there instead:
 All five widgets load Chart.js from:
 
 ```
-https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js
+https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js
 ```
 
 The `window.__chartjs` promise is attached to the **parent** page's `window`
