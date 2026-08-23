@@ -24,3 +24,6 @@ data-raw/
 
 # OS
 .DS_Store
+
+# Graphify knowledge graph (regenerable build artifact; rebuilt by post-commit hook)
+graphify-out/
