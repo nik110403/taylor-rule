@@ -19,6 +19,7 @@ cat("═════════════════════════
 
 run_script("R/01_data.R")
 run_script("R/02_analysis.R")
+run_script("R/05_assumption_checks.R")
 run_script("R/04_hook_figure.R")
 run_script("R/03_figures.R")
 run_script("R/04_pngs.R")
@@ -31,6 +32,7 @@ expected_outputs <- c(
   "output/data/df_quarterly.rds",
   "output/data/df_analysis.rds",
   "output/data/df_ccf.rds",
+  "output/assumption_report.md",
   "output/widgets/fig0_hook.html",
   "output/widgets/fig1_taylor_vs_actual.html",
   "output/widgets/fig2_deviation.html",
