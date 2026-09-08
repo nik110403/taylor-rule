@@ -3,6 +3,8 @@ if (!nzchar(FRED_API_KEY)) {
   stop("Set FRED_API_KEY in .Renviron (free key: https://fredaccount.stlouisfed.org/apikeys)")
 }
 
+FRED_VINTAGE  <- as.Date("2026-09-08")   # realtime pin; see README "Data vintage"
+
 PROJECT_ROOT  <- getwd()
 OUTPUT_DIR    <- file.path(PROJECT_ROOT, "output")
 WIDGETS_DIR   <- file.path(PROJECT_ROOT, "output/widgets")

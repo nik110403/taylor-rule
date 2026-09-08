@@ -14,6 +14,13 @@ exactly against the vintage retrieved for the published piece; subsequent pulls 
 output gap series and therefore every Taylor prescription. The sample window is locked at
 2015 Q1–2024 Q4 in `R/config.R` (`START_DATE`, `END_DATE`).
 
+`R/config.R` also pins a `FRED_VINTAGE` (realtime-as-of date) passed as
+`realtime_start`/`realtime_end` on every FRED pull, with the raw response archived under
+`data-raw/fred/<FRED_VINTAGE>/`. The published figures predate this pin — they reflect
+whatever FRED reported at publication time, not `FRED_VINTAGE`. Re-running `R/01_data.R`
+reproduces the FRED state as of `FRED_VINTAGE`, which will diverge from the published
+numbers as FRED revises `GDPPOT` and other series.
+
 ## Requirements
 
 - R (≥ 4.0); packages auto-install on first run via `R/setup.R`: `fredr`, `dplyr`, `vars`,
