@@ -1,0 +1,12 @@
+cff-version: 1.2.0
+message: "If you use this package, please cite it as below."
+type: software
+title: "Discretion Over Rules: Federal Reserve Policy Departures and the Inflation Surge of 2021–2022"
+abstract: "The federal funds rate sat below its baseline Taylor-rule prescription in 33 of 40 quarters from 2015 to 2024, peaking 8.3 pp below in Q1 2022, and the gap helps predict core PCE inflation one to two quarters ahead."
+authors:
+  - family-names: Khosravipour
+    given-names: Nik
+    orcid: "https://orcid.org/0009-0007-4464-5002"
+repository-code: "https://github.com/nik110403/taylor-rule"
+url: "https://nikkhosravipour.com/post/discretion-over-rules-federal-reserve-policy-departures-and-the-inflation-surge-of-2021-2022"
+license: MIT
