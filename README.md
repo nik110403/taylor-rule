@@ -4,7 +4,7 @@
 
 [Paper](https://nikkhosravipour.com/post/discretion-over-rules-federal-reserve-policy-departures-and-the-inflation-surge-of-2021-2022) · [Data](#data-availability) · [Site](https://nikkhosravipour.com)
 
-[![License: MIT](https://img.shields.io/badge/code-MIT-8c2f1b?style=flat)](LICENSE) [![License: CC BY 4.0](https://img.shields.io/badge/text%20and%20figures-CC%20BY%204.0-8c2f1b?style=flat)](LICENSE-docs) [![R 4.0+](https://img.shields.io/badge/R-4.0%2B-57534e?style=flat)](https://www.r-project.org/)
+[![DOI](https://img.shields.io/badge/DOI-10.5281%2Fzenodo.23404665-8c2f1b?style=flat)](https://doi.org/10.5281/zenodo.23404665) [![License: MIT](https://img.shields.io/badge/code-MIT-8c2f1b?style=flat)](LICENSE) [![License: CC BY 4.0](https://img.shields.io/badge/text%20and%20figures-CC%20BY%204.0-8c2f1b?style=flat)](LICENSE-docs) [![R 4.0+](https://img.shields.io/badge/R-4.0%2B-57534e?style=flat)](https://www.r-project.org/)
 
 <picture><source media="(prefers-color-scheme: dark)" srcset="output/figures/fig0_hook-dark.png"><img src="output/figures/fig0_hook.png" alt="Dual-axis chart, 2015 to 2024: the Taylor-rule policy gap in percentage points and core PCE inflation in percent, both peaking in 2022" width="100%"></picture>
 
@@ -104,7 +104,7 @@ The `*.rds` files are written to `output/data/` at run time and are not committe
 
 ## Citation
 
-GitHub shows a "Cite this repository" button from `CITATION.cff`. BibTeX:
+Archived on Zenodo: [doi:10.5281/zenodo.23404665](https://doi.org/10.5281/zenodo.23404665) (all versions). GitHub shows a "Cite this repository" button from `CITATION.cff`. BibTeX:
 
 <details>
 <summary>BibTeX</summary>
@@ -114,6 +114,7 @@ GitHub shows a "Cite this repository" button from `CITATION.cff`. BibTeX:
   author = {Khosravipour, Nik},
   title  = {Discretion Over Rules: Federal Reserve Policy Departures and the Inflation Surge of 2021--2022},
   year   = {2026},
+  doi    = {10.5281/zenodo.23404665},
   url    = {https://github.com/nik110403/taylor-rule}
 }
 ```
